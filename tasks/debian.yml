@@ -12,7 +12,7 @@
   file: path=/etc/network/interfaces.d state=directory
 
 - name: debian | configuring defined interfaces
-  template: src=etc/network/interfaces.d/interfaces.j2 dest=/etc/network/interfaces.d/{{ item.name }} owner=root group=root mode=0644
+  template: src=etc/network/interfaces.d/interfaces.j2 dest=/etc/network/interfaces.d/ifcfg-{{ item.name }} owner=root group=root mode=0644
   register: config_interface
   with_items: interfaces
   when: config_interfaces is defined and config_interfaces
