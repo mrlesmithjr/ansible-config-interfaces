@@ -1,21 +1,21 @@
 # {{ ansible_managed }}
 
-{% if interface.configure %}
-{%   if interface.method == "static" %}
-auto {{ interface.name }}
-iface {{ interface.name }} inet {{ interface.method }}
-{%     if interface.address is defined %}
-address {{ interface.address }}
+{% if item.configure %}
+{%   if item.method == "static" %}
+auto {{ item.name }}
+iface {{ item.name }} inet {{ item.method }}
+{%     if item.address is defined %}
+address {{ item.address }}
 {%     endif %}
-{%     if interface.netmask is defined %}
-netmask {{ interface.netmask }}
+{%     if item.netmask is defined %}
+netmask {{ item.netmask }}
 {%     endif %}
-{%     if interface.gateway is defined %}
-gateway {{ interface.gateway }}
+{%     if item.gateway is defined %}
+gateway {{ item.gateway }}
 {%     endif %}
 {%   endif %}
-{%   if interface.method == "dhcp" %}
-auto {{ interface.name }}
-iface {{ interface.name }} inet {{ interface.method }}
+{%   if item.method == "dhcp" %}
+auto {{ item.name }}
+iface {{ item.name }} inet {{ item.method }}
 {%   endif %}
 {% endif %}
