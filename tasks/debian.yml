@@ -1,0 +1,23 @@
+---
+- name: debian | installing pre-req packages
+  apt: name={{ item }} state=present
+  with_items:
+    - vlan
+
+- name: debian | configuring defined interfaces
+  template: src=etc/network/interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=0644
+  when: config_interfaces is defined and config_interfaces
+
+- name: debian | ensuring interfaces.d folder exists
+  file: path=/etc/network/interfaces.d state=directory
+
+- name: debian | configuring defined interfaces
+  template: src=etc/network/interfaces.d/interfaces.j2 dest=/etc/network/interfaces.d/{{ item.name }} owner=root group=root mode=0644
+  register: config_interface
+  with_items: interfaces
+  when: config_interfaces is defined and config_interfaces
+
+- name: debian | restarting network interfaces
+  shell: bash -c "ifdown {{ item.name }} && ifup {{ item.name }}"
+  with_items: interfaces
+  when: (config_interfaces is defined and config_interfaces) and item.configure and config_interface.changed

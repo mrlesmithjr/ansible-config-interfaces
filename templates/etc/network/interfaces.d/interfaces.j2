@@ -1,0 +1,21 @@
+# {{ ansible_managed }}
+
+{% if interface.configure %}
+{%   if interface.method == "static" %}
+auto {{ interface.name }}
+iface {{ interface.name }} inet {{ interface.method }}
+{%     if interface.address is defined %}
+address {{ interface.address }}
+{%     endif %}
+{%     if interface.netmask is defined %}
+netmask {{ interface.netmask }}
+{%     endif %}
+{%     if interface.gateway is defined %}
+gateway {{ interface.gateway }}
+{%     endif %}
+{%   endif %}
+{%   if interface.method == "dhcp" %}
+auto {{ interface.name }}
+iface {{ interface.name }} inet {{ interface.method }}
+{%   endif %}
+{% endif %}
