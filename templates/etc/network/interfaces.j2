@@ -4,8 +4,12 @@
 auto lo
 iface lo inet loopback
 
+{% if dns_nameservers is defined %}
 dns-nameservers {{ dns_nameservers }}
+{% endif %}
+{% if dns_search is defined %}
 dns-search {{ dns_search }}
+{% endif %}
 
 # path to interfaces files
 source /etc/network/interfaces.d/*
