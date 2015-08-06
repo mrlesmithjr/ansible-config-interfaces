@@ -4,6 +4,10 @@
   with_items:
     - vlan
 
+#- name: debian | grabbing interfaces
+#  shell: ifconfig -a | sed 's/[ \t].*//;/^\(lo\|\)$/d'
+#  register: show_interfaces
+
 - name: debian | configuring defined interfaces
   template: src=etc/network/interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=0644
   when: config_interfaces is defined and config_interfaces
