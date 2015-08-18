@@ -4,13 +4,13 @@
 {%   if item.method == "static" %}
 auto {{ item.name }}
 iface {{ item.name }} inet {{ item.method }}
-{%     if item.address is defined %}
+{%     if item.address is defined and item.address != None %}
 address {{ item.address }}
 {%     endif %}
-{%     if item.netmask is defined %}
+{%     if item.netmask is defined and item.netmask != None %}
 netmask {{ item.netmask }}
 {%     endif %}
-{%     if item.gateway is defined %}
+{%     if item.gateway is defined and item.gateway != None %}
 gateway {{ item.gateway }}
 {%     endif %}
 {%   endif %}
