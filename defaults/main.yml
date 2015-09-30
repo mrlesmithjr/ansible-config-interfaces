@@ -27,5 +27,6 @@ interfaces: [] #define interfaces to configure...define in host_vars/host...unle
 #    netmask_cidr: 24
 #    network: 192.168.1.0
 dns_nameservers: '{{ pri_dns }} {{ sec_dns }}'  #defines all dns servers to configure...define here or globally in group_vars/all
+dns_search: '{{ pri_domain_name }}'  #defines your global dns suffix search...define here or globally in group_vars/all
 pri_dns:  #defines primary dns server...define here or globally in group_vars/all
 sec_dns:  #defines secondary dns server...define here or globally in group_vars/all
