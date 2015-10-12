@@ -18,4 +18,8 @@ gateway {{ item.gateway }}
 auto {{ item.name }}
 iface {{ item.name }} inet {{ item.method }}
 {%   endif %}
+{%   if item.wireless_network is defined and item.wireless_network %}
+wpa-ssid {{ item.wpa_ssid }}
+wpa-psk {{ item.wpa_psk }}
+{%   endif %}
 {% endif %}
