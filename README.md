@@ -14,7 +14,7 @@ These variables for most occasions should remain as they are. The actual variabl
 ````
 ---
 # defaults file for ansible-config-interfaces
-config_interfaces: false  #defines if interfaces should be configured...define in host_vars/host
+config_network_interfaces: false  #defines if interfaces should be configured...define in host_vars/host
 interfaces: [] #define interfaces to configure...define in host_vars/host...unless setting all interfaces for every host to dhcp for example.
 #  - name: eth0
 #    address:
