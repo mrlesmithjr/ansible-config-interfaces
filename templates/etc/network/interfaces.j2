@@ -7,7 +7,7 @@ iface lo inet loopback
 {% if config_network_interfaces is defined and config_network_interfaces %}
 {%   for item in network_interfaces %}
 {%     if item.configure is defined and item.configure %}
-{%       if item.method == "static" %}
+{%       if item.method == "static" or item.method == "manual" %}
 auto {{ item.name }}
 iface {{ item.name }} inet {{ item.method }}
 {%         if item.address is defined and item.address != None %}
