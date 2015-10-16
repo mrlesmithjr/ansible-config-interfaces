@@ -49,7 +49,7 @@ wpa-psk {{ item.wpa_psk }}
 {%       endif %}
 auto {{ item.name }}
 iface {{ item.name }} inet {{ item.method }}
-{%       if item.slaves is defined and item.slave != None %}
+{%       if item.slaves is defined and item.slaves != None %}
   bond_slaves {{ item.slaves }}
 {%       endif %}
 {%       if item.primary is defined and item.primary != None %}
