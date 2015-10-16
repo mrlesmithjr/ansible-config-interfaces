@@ -37,7 +37,7 @@ wpa-psk {{ item.wpa_psk }}
 {%     endif %}
 
 {%   endfor %}
-##########
+########## End of Network Interfaces
 {% endif %}
 
 {% if config_network_bonds is defined and config_network_bonds %}
@@ -61,8 +61,9 @@ iface {{ item.name }} inet {{ item.method }}
 {%         endfor %}
 {%       endif %}
 {%     endif %}
+
 {%   endfor %}
-##########
+########## End of Network Bonds
 {% endif %}
 
 {% if dns_nameservers is defined %}
