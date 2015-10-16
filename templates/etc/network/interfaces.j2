@@ -5,7 +5,7 @@ auto lo
 iface lo inet loopback
 
 {% if config_network_interfaces is defined and config_network_interfaces %}
-{%   for item in config_network_interfaces %}
+{%   for item in network_interfaces %}
 {%     if item.configure is defined and item.configure %}
 {%       if item.method == "static" %}
 auto {{ item.name }}
