@@ -5,6 +5,7 @@ auto lo
 iface lo inet loopback
 
 {% if config_network_interfaces is defined and config_network_interfaces %}
+########## Network Interfaces
 {%   for item in network_interfaces %}
 {%     if item.configure is defined and item.configure %}
 {%       if item.method == "static" or item.method == "manual" %}
@@ -36,6 +37,32 @@ wpa-psk {{ item.wpa_psk }}
 {%     endif %}
 
 {%   endfor %}
+##########
+{% endif %}
+
+{% if config_network_bonds is defined and config_network_bonds %}
+########## Network Bonds
+{%   for item in network_bonds %}
+{%     if item.configure is defined and item.configure %}
+{%       if item.comment is defined and item.comment != None %}
+# {{ item.comment }}
+{%       endif %}
+auto {{ item.name }}
+iface {{ item.name }} inet {{ item.method }}
+{%       if item.slaves is defined and item.slave != None %}
+  bond_slaves {{ item.slaves }}
+{%       endif %}
+{%       if item.primary is defined and item.primary != None %}
+  bond_primary {{ item.primary }}
+{%       endif %}
+{%       if item.addl_settings is defined and item.addl_settings != None %}
+{%         for setting in item.addl_settings %}
+  {{ setting }}
+{%         endfor %}
+{%       endif %}
+{%     endif %}
+{%   endfor %}
+##########
 {% endif %}
 
 {% if dns_nameservers is defined %}
