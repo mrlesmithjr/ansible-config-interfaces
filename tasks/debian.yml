@@ -27,7 +27,10 @@
 
 - name: debian | restarting network interfaces
   shell: bash -c "ifdown {{ item.name }} && ifup {{ item.name }}"
-  with_items:
-    - network_interfaces
-    - network_vlans
+  with_items: network_interfaces
   when: (config_network_interfaces is defined and config_network_interfaces) and item.configure and config_interface.changed and (enable_configured_interfaces_after_defining is defined and enable_configured_interfaces_after_defining)
+
+- name: debian | restarting network interfaces
+  shell: bash -c "ifdown {{ item.name }} && ifup {{ item.name }}"
+  with_items: network_vlans
+  when: (config_network_vlans is defined and config_network_vlans) and item.configure and config_interface.changed and (enable_configured_interfaces_after_defining is defined and enable_configured_interfaces_after_defining)
