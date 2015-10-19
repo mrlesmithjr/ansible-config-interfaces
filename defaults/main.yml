@@ -7,10 +7,21 @@ config_network_vlans: false  #defines if kvm_network_vlans should be configured 
 dns_nameservers: '{{ pri_dns }} {{ sec_dns }}'  #defines all dns servers to configure...define here or globally in group_vars/all
 dns_search: '{{ pri_domain_name }}'  #defines your global dns suffix search...define here or globally in group_vars/all
 enable_configured_interfaces_after_defining: false  #defines if interfaces, bonds, bridges and vlans should be brought up after defining.
+kvm_virtual_networks:
+  - name: DMZ_ORANGE_VLAN100
+    mode: bridge
+    bridge_name: vmbr100
+    autostart: true
+    state: active #options are active, inactive, present and absent
+  - name: Green_Servers_VLAN101
+    mode: bridge
+    bridge_name: vmbr101
+    autostart: true
+    state: active  #options are active, inactive, present and absent
 network_bonds:  #define network bonds and settings if desired (Define separately for each node in host_vars) - https://help.ubuntu.com/community/UbuntuBonding
   - name: bond0
     configure: true
-    comment: Management
+    comment: Management Networks
     method: manual
     slaves: eth0 eth1
     primary: eth0
@@ -19,16 +30,16 @@ network_bonds:  #define network bonds and settings if desired (Define separately
       - bond_miimon 100
   - name: bond1
     configure: true
-    comment: Storage
+    comment: Storage Networks
     method: manual
     slaves: eth3 eth4
     primary: eth3
     addl_settings:
-      - bond_mode balance-alb
+#      - bond_mode balance-alb
       - bond_miimon 100
   - name: bond2
     configure: true
-    comment: VMs
+    comment: VM Traffic Networks
     method: manual
     slaves: eth2 eth5
     primary: eth2
@@ -36,6 +47,31 @@ network_bonds:  #define network bonds and settings if desired (Define separately
       - bond_mode balance-alb
       - bond_miimon 100
 network_bridges:  #define network bridges and settings if desired (Define separately for each node in host_vars) - https://help.ubuntu.com/community/NetworkConnectionBridge
+  - name: br0
+    configure: true
+    comment: Management - VLAN106
+    method: static
+    address: "{{ kvm_mgmt_ip }}"
+    netmask: 255.255.255.0
+    netmask_cidr: 24
+    gateway: "{{ kvm_mgmt_gateway }}"
+    ports: bond0.106
+    addl_settings:
+      - "up route add default gw {{ kvm_mgmt_gateway }}"
+      - bridge_stp off
+      - bridge_fd 0
+  - name: br1
+    configure: true
+    comment: NFS-1 - VLAN127
+    method: static
+    address: "{{ kvm_nfs1_ip }}"
+    netmask: 255.255.255.0
+    netmask_cidr: 24
+    gateway:
+    ports: bond1.127
+    addl_settings:
+      - bridge_stp off
+      - bridge_fd 0
   - name: vmbr100
     configure: true
     comment: Orange-DMZ - Virtual Networking
@@ -44,7 +80,7 @@ network_bridges:  #define network bridges and settings if desired (Define separa
     netmask:
     netmask_cidr:
     gateway:
-    ports: vlan100
+    ports: bond2.100
     addl_settings:
       - bridge_stp off
       - bridge_fd 0
@@ -56,7 +92,7 @@ network_bridges:  #define network bridges and settings if desired (Define separa
     netmask:
     netmask_cidr:
     gateway:
-    ports: vlan101
+    ports: bond2.101
     addl_settings:
       - bridge_stp off
       - bridge_fd 0
@@ -124,8 +160,8 @@ network_interfaces:  #define interfaces and settings. (Define separately for eac
     gateway:
     addl_settings:
       - bond_master bond2
-network_vlans:  #define vlans and settings if desired. (Define separately for each node in host_vars) 
-  - name: vlan100
+network_vlans:  #define vlans and settings if desired. (Define separately for each node in host_vars)
+  - name: bond2.100
     configure: true
     comment: Orange-DMZ
     method: manual
@@ -135,7 +171,7 @@ network_vlans:  #define vlans and settings if desired. (Define separately for ea
     gateway:
     vlan_device: bond2
     addl_settings:
-  - name: vlan101
+  - name: bond2.101
     configure: true
     comment: Green-Servers
     method: manual
@@ -145,24 +181,23 @@ network_vlans:  #define vlans and settings if desired. (Define separately for ea
     gateway:
     vlan_device: bond2
     addl_settings:
-  - name: vlan106
+  - name: bond0.106
     configure: true
     comment: Management
-    method: static
-    address: 10.0.106.51
-    netmask: 255.255.255.0
-    netmask_cidr: 24
-    gateway: 10.0.106.51
+    method: manual
+    address:
+    netmask:
+    netmask_cidr:
+    gateway:
     vlan_device: bond0
     addl_settings:
-      - up route add default gw 10.0.106.1
-  - name: vlan127
+  - name: bond1.127
     configure: true
     comment: NFS-1
-    method: static
-    address: 10.0.127.151
-    netmask: 255.255.255.0
-    netmask_cidr: 24
+    method: manual
+    address:
+    netmask:
+    netmask_cidr:
     gateway:
     vlan_device: bond1
     addl_settings:
