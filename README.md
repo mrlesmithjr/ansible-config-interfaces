@@ -21,17 +21,6 @@ config_network_vlans: false  #defines if kvm_network_vlans should be configured 
 dns_nameservers: '{{ pri_dns }} {{ sec_dns }}'  #defines all dns servers to configure...define here or globally in group_vars/all
 dns_search: '{{ pri_domain_name }}'  #defines your global dns suffix search...define here or globally in group_vars/all
 enable_configured_interfaces_after_defining: false  #defines if interfaces, bonds, bridges and vlans should be brought up after defining.
-kvm_virtual_networks:
-  - name: DMZ_ORANGE_VLAN100
-    mode: bridge
-    bridge_name: vmbr100
-    autostart: true
-    state: active #options are active, inactive, present and absent
-  - name: Green_Servers_VLAN101
-    mode: bridge
-    bridge_name: vmbr101
-    autostart: true
-    state: active  #options are active, inactive, present and absent
 network_bonds:  #define network bonds and settings if desired (Define separately for each node in host_vars) - https://help.ubuntu.com/community/UbuntuBonding
   - name: bond0
     configure: true
