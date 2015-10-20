@@ -7,6 +7,9 @@ config_network_vlans: false  #defines if kvm_network_vlans should be configured 
 dns_nameservers: '{{ pri_dns }} {{ sec_dns }}'  #defines all dns servers to configure...define here or globally in group_vars/all
 dns_search: '{{ pri_domain_name }}'  #defines your global dns suffix search...define here or globally in group_vars/all
 enable_configured_interfaces_after_defining: false  #defines if interfaces, bonds, bridges and vlans should be brought up after defining.
+kvm_mgmt_ip: 0.0.0.0  #defines management IP for var on network_bridges....This is for demo purposes only
+kvm_mgmt_gateway: 0.0.0.0  #defines management gateway for var on network_bridges....This is for demo purposes only
+kvm_nfs1_ip: 0.0.0.0  #defines IP address to define on Storage interface.....This is for demo purposes only
 network_bonds:  #define network bonds and settings if desired (Define separately for each node in host_vars) - https://help.ubuntu.com/community/UbuntuBonding
   - name: bond0
     configure: true
