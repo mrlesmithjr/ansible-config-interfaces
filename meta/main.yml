@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Larry Smith Jr.
-  description: Configures network interfaces for either static or dhcp.
+  description: Configures network interfaces for either static, dhcp or manual. Ability to create VLAN, Bond and Bridge interfaces as well.
   #company: your company (optional)
   # If the issue tracker for your role is not on github, uncomment the
   # next line and provide a value

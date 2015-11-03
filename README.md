@@ -1,7 +1,7 @@
 Role Name
 =========
 
-Configures network interfaces for either static or dhcp.
+Configures network interfaces for either static, dhcp or manual. Ability to create VLAN, Bond and Bridge interfaces as well.
 
 Requirements
 ------------
