@@ -8,6 +8,9 @@ iface lo inet loopback
 ########## Network Interfaces
 {%   for item in network_interfaces %}
 {%     if item.configure is defined and item.configure %}
+{%       if item.comment is defined and item.comment != None %}
+# {{ item.comment }}
+{%       endif %}
 {%       if item.method == "static" or item.method == "manual" %}
 auto {{ item.name }}
 iface {{ item.name }} inet {{ item.method }}
