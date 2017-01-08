@@ -142,7 +142,7 @@ iface {{ item.name }} inet {{ item.method }}
 {% endif %}
 
 {% if dns_nameservers is defined %}
-dns-nameservers {{ item.dns_nameservers|join (' ') }}
+dns-nameservers {{ dns_nameservers|join (' ') }}
 {% endif %}
 {% if dns_search is defined %}
 dns-search {{ dns_search }}
