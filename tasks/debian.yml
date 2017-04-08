@@ -11,7 +11,7 @@
     state: "present"
   when: >
         ansible_distribution == "Ubuntu" and
-        ansible_distribution_version <= '16.04'
+        ansible_distribution_version >= '16.04'
 
 #- name: debian | grabbing interfaces
 #  shell: ifconfig -a | sed 's/[ \t].*//;/^\(lo\|\)$/d'
