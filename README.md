@@ -19,7 +19,6 @@ Role Variables
 
 config_interfaces_debian_packages:
   - 'bridge-utils'
-  - 'ifenslave'
   - 'lldpd'
   - 'vlan'
 
