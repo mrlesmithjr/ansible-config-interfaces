@@ -96,4 +96,15 @@ network_interfaces: []
   #   comment: 'br0 member'
   #   method: 'manual'
 
+network_vlans: []
+  # - name: 'enp0s8.100'
+  #   configure: true
+  #   comment: 'VLAN 100'
+  #   method: 'manual'
+  #   address:
+  #   netmask:
+  #   netmask_cidr:
+  #   gateway:
+  #   vlan_device: 'enp0s8'
+
 pri_domain_name: 'example.org'
