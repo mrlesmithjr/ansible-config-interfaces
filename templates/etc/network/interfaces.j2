@@ -32,9 +32,9 @@ iface {{ item['name'] }} inet {{ item['method']|lower }}
   wpa-ssid {{ item['wpa_ssid'] }}
   wpa-psk {{ item['wpa_psk'] }}
 {%       endif %}
-{%       if item['addl_settings'] is defined and item['addl_settings'] != None %}
-{%         for setting in item['addl_settings'] %}
-  {{ setting }}
+{%       if item['parameters'] is defined and item['parameters'] != None %}
+{%         for param in item['parameters'] %}
+  {{ param['param'] }} {{ param['val'] }}
 {%         endfor %}
 {%       endif %}
 {%     endif %}
@@ -66,12 +66,9 @@ iface {{ item['name'] }} inet {{ item['method']|lower }}
 {%       if item['slaves'] is defined and item['slaves'] != None %}
   bond_slaves {{ item['slaves']|join (' ') }}
 {%       endif %}
-{%       if item['primary'] is defined and item['primary'] != None %}
-  bond_primary {{ item['primary'] }}
-{%       endif %}
-{%       if item['addl_settings'] is defined and item['addl_settings'] != None %}
-{%         for setting in item['addl_settings'] %}
-  {{ setting }}
+{%       if item['parameters'] is defined and item['parameters'] != None %}
+{%         for param in item['parameters'] %}
+  {{ param['param'] }} {{ param['val'] }}
 {%         endfor %}
 {%       endif %}
 {%     endif %}
@@ -104,9 +101,9 @@ iface {{ item['name'] }} inet {{ item['method']|lower }}
 auto {{ item['name'] }}
 iface {{ item['name'] }} inet {{ item['method']|lower }}
 {%       endif %}
-{%       if item['addl_settings'] is defined and item['addl_settings'] != None %}
-{%         for setting in item['addl_settings'] %}
-  {{ setting }}
+{%       if item['parameters'] is defined and item['parameters'] != None %}
+{%         for param in item['parameters'] %}
+  {{ param['param'] }} {{ param['val'] }}
 {%         endfor %}
 {%       endif %}
   vlan_raw_device {{ item['vlan_device'] }}
@@ -140,9 +137,9 @@ iface {{ item['name'] }} inet {{ item['method']|lower }}
 auto {{ item['name'] }}
 iface {{ item['name'] }} inet {{ item['method']|lower }}
 {%       endif %}
-{%       if item['addl_settings'] is defined and item['addl_settings'] != None %}
-{%         for setting in item['addl_settings'] %}
-  {{ setting }}
+{%       if item['parameters'] is defined and item['parameters'] != None %}
+{%         for param in item['parameters'] %}
+  {{ param['param'] }} {{ param['val'] }}
 {%         endfor %}
 {%       endif %}
   bridge_ports {{ item['ports']|join(' ') }}
