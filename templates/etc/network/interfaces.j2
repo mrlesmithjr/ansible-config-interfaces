@@ -145,7 +145,7 @@ iface {{ item['name'] }} inet {{ item['method']|lower }}
   {{ setting }}
 {%         endfor %}
 {%       endif %}
-  bridge_ports {{ item['ports'] }}
+  bridge_ports {{ item['ports']|join(' ') }}
 {%     endif %}
 
 {%   endfor %}

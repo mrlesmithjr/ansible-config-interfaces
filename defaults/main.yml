@@ -31,13 +31,21 @@ network_bonds: []
   #   configure: true
   #   comment: 'Bond Group 0'
   #   method: 'static'
+  #   parameters:
+  #     - param: 'miimon'
+  #       val: '100'
+  #     - param: 'mode'
+  #       val: 'active-backup'
+  #     - param: 'primary'
+  #       val: 'enp0s9'
   #   slaves:
   #     - 'enp0s9'
-  #     - 'enp010'
+  #     - 'enp0s10'
   #   primary: 'enp0s9'
   #   addl_settings:
   #     - 'bond_mode active-backup'
   #     - 'bond_miimon 100'
+
 network_bridges: []
   # - name: 'br0'
   #   configure: true
@@ -47,11 +55,13 @@ network_bridges: []
   #   netmask: '255.255.255.0'
   #   netmask_cidr: '24'
   #   # gateway: '192.168.1.1'
-  #   ports: 'enp0s16'
+  #   ports:
+  #     - 'enp0s16'
   #   addl_settings:
   #     # - 'up route add default gw 10.0.106.1'
   #     - 'bridge_stp off'
   #     - 'bridge_fd 0'
+
 network_interfaces: []
   # - name: 'enp0s3'
   #   configure: true
@@ -79,8 +89,8 @@ network_interfaces: []
   #   configure: true
   #   comment: 'br0 member'
   #   method: 'manual'
-  #   # addl_settings:
-  #   #   - 'bond_master bond0'
+  #   addl_settings:
+  #     - 'bond_master bond0'
 
 network_vlans: []
   # - name: 'enp0s8.100'
