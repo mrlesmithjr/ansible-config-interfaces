@@ -149,6 +149,119 @@ iface {{ item['name'] }} inet {{ item['method']|lower }}
 ########## End of Network Bridges
 {% endif %}
 
+{% if config_ovs_bonds is defined and config_ovs_bonds %}
+########## OVS Bonds
+{%   for item in ovs_bonds %}
+{%     if item['configure'] is defined and item['configure'] %}
+{%       if item['comment'] is defined %}
+# {{ item['comment'] }}
+{%       endif %}
+allow-{{ item['bridge'] }} {{ item['name'] }}
+iface {{ item['name'] }} inet {{ item['method']|lower }}
+{%       if item['method']|lower == "static" or item['method']|lower == "manual" %}
+{%         if item['address'] is defined and item['address'] != None %}
+  address {{ item['address'] }}
+{%         endif %}
+{%         if item['netmask'] is defined and item['netmask'] != None %}
+  netmask {{ item['netmask'] }}
+{%         endif %}
+{%         if item['gateway'] is defined and item['gateway'] != None %}
+  gateway {{ item['gateway'] }}
+{%         endif %}
+{%       endif %}
+{%       if item['parameters'] is defined and item['parameters'] != None %}
+{%         for param in item['parameters'] %}
+  {{ param['param'] }} {{ param['val'] }}
+{%         endfor %}
+{%       endif %}
+  ovs_bridge {{ item['bridge'] }}
+  ovs_type OVSBond
+  ovs_bonds {{ item['ports']|join(' ') }}
+{%       if item['options'] is defined %}
+  ovs_options {% for item2 in item['options'] %}{{ item2['opt'] }}={{ item2['val'] }}{% if not loop.last %} {% endif %}{% endfor %}
+
+{%       endif %}
+{%     endif %}
+
+{%   endfor %}
+########## End of OVS Bonds
+{% endif %}
+
+{% if config_ovs_bridges is defined and config_ovs_bridges %}
+########## OVS Bridges
+{%   for item in ovs_bridges %}
+{%     if item['configure'] is defined and item['configure'] %}
+{%       if item['comment'] is defined %}
+# {{ item['comment'] }}
+{%       endif %}
+auto {{ item['name'] }}
+allow-ovs {{ item['name'] }}
+iface {{ item['name'] }} inet {{ item['method']|lower }}
+{%       if item['method']|lower == "static" or item['method']|lower == "manual" %}
+{%         if item['address'] is defined and item['address'] != None %}
+  address {{ item['address'] }}
+{%         endif %}
+{%         if item['netmask'] is defined and item['netmask'] != None %}
+  netmask {{ item['netmask'] }}
+{%         endif %}
+{%         if item['gateway'] is defined and item['gateway'] != None %}
+  gateway {{ item['gateway'] }}
+{%         endif %}
+{%       endif %}
+{%       if item['parameters'] is defined and item['parameters'] != None %}
+{%         for param in item['parameters'] %}
+  {{ param['param'] }} {{ param['val'] }}
+{%         endfor %}
+{%       endif %}
+  ovs_type OVSBridge
+  ovs_ports {{ item['ports']|join(' ') }}
+{%       if item['options'] is defined %}
+  ovs_options {% for item2 in item['options'] %}{{ item2['opt'] }}={{ item2['val'] }}{% if not loop.last %} {% endif %}{% endfor %}
+
+{%       endif %}
+{%     endif %}
+
+{%   endfor %}
+########## End of OVS Bridges
+{% endif %}
+
+{% if config_ovs_interfaces is defined and config_ovs_interfaces %}
+########## OVS Interfaces
+{%   for item in ovs_interfaces %}
+{%     if item['configure'] is defined and item['configure'] %}
+{%       if item['comment'] is defined %}
+# {{ item['comment'] }}
+{%       endif %}
+allow-{{ item['bridge'] }} {{ item['name'] }}
+iface {{ item['name'] }} inet {{ item['method']|lower }}
+{%       if item['method']|lower == "static" or item['method']|lower == "manual" %}
+{%         if item['address'] is defined and item['address'] != None %}
+  address {{ item['address'] }}
+{%         endif %}
+{%         if item['netmask'] is defined and item['netmask'] != None %}
+  netmask {{ item['netmask'] }}
+{%         endif %}
+{%         if item['gateway'] is defined and item['gateway'] != None %}
+  gateway {{ item['gateway'] }}
+{%         endif %}
+{%       endif %}
+{%       if item['parameters'] is defined and item['parameters'] != None %}
+{%         for param in item['parameters'] %}
+  {{ param['param'] }} {{ param['val'] }}
+{%         endfor %}
+{%       endif %}
+  ovs_bridge {{ item['bridge'] }}
+  ovs_type OVSIntPort
+{%       if item['options'] is defined %}
+  ovs_options {% for item2 in item['options'] %}{{ item2['opt'] }}={{ item2['val'] }}{% if not loop.last %} {% endif %}{% endfor %}
+
+{%       endif %}
+{%     endif %}
+
+{%   endfor %}
+########## End of OVS Interfaces
+{% endif %}
+
 {% if dns_nameservers is defined %}
 dns-nameservers {{ dns_nameservers|join (' ') }}
 {% endif %}
