@@ -72,5 +72,6 @@
           - 'bond_master bond0'
     pri_domain_name: 'test.vagrant.local'
   roles:
+    - role: ansible-openvswitch
     - role: ansible-config-interfaces
   tasks:

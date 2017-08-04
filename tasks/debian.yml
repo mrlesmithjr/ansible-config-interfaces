@@ -40,7 +40,7 @@
         network_interfaces != []
 
 - name: debian | Restarting Network Interfaces
-  shell: bash -c "ifdown {{ item.name }} && ifup {{ item.name }}"
+  shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
   with_items: '{{ network_interfaces }}'
   when: >
@@ -49,7 +49,7 @@
         config_interface['changed']
 
 - name: debian | Restarting Network VLANs
-  shell: bash -c "ifdown {{ item.name }} && ifup {{ item.name }}"
+  shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
   with_items: '{{ network_vlans }}'
   when: >
@@ -59,11 +59,41 @@
         config_interface['changed']
 
 - name: debian | Restarting Network Bridges
-  shell: bash -c "ifdown {{ item.name }} && ifup {{ item.name }}"
+  shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
   become: true
   with_items: '{{ network_bridges }}'
   when: >
         config_network_bridges and
+        enable_configured_interfaces_after_defining and
+        item['configure'] and
+        config_interface['changed']
+
+- name: debian | Restarting OVS Bridges
+  shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  become: true
+  with_items: '{{ ovs_bridges }}'
+  when: >
+        config_ovs_bridges and
+        enable_configured_interfaces_after_defining and
+        item['configure'] and
+        config_interface['changed']
+
+- name: debian | Restarting OVS Bonds
+  shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  become: true
+  with_items: '{{ ovs_bonds }}'
+  when: >
+        config_ovs_bonds and
+        enable_configured_interfaces_after_defining and
+        item['configure'] and
+        config_interface['changed']
+
+- name: debian | Restarting OVS Interfaces
+  shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  become: true
+  with_items: '{{ ovs_interfaces }}'
+  when: >
+        config_ovs_interfaces and
         enable_configured_interfaces_after_defining and
         item['configure'] and
         config_interface['changed']
