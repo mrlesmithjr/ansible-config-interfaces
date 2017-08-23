@@ -232,6 +232,7 @@ iface {{ item['name'] }} inet {{ item['method']|lower }}
 {%       if item['comment'] is defined %}
 # {{ item['comment'] }}
 {%       endif %}
+auto {{ item['name'] }}
 allow-{{ item['bridge'] }} {{ item['name'] }}
 iface {{ item['name'] }} inet {{ item['method']|lower }}
 {%       if item['method']|lower == "static" or item['method']|lower == "manual" %}
