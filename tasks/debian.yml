@@ -36,8 +36,7 @@
   become: true
   when: >
         (config_network_interfaces is defined and
-        config_network_interfaces) and
-        network_interfaces != []
+        config_network_interfaces)
 
 - name: debian | Restarting Network Interfaces
   shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
