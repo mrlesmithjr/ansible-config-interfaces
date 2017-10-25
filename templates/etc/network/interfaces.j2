@@ -142,7 +142,7 @@ iface {{ item['name'] }} inet {{ item['method']|lower }}
   {{ param['param'] }} {{ param['val'] }}
 {%         endfor %}
 {%       endif %}
-  bridge_ports {{ item['ports']|join(' ') }}
+  bridge_ports {{ item['ports']|join('') }}
 {%     endif %}
 
 {%   endfor %}
