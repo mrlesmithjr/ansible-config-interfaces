@@ -43,7 +43,7 @@
   become: true
   with_items: '{{ network_interfaces }}'
   when: >
-        enable_configured_interfaces_after_defining and
+        (enable_configured_interfaces_after_defining or item['enable']) and
         item['configure'] and
         config_interface['changed']
 
@@ -53,7 +53,7 @@
   with_items: '{{ network_vlans }}'
   when: >
         config_network_vlans and
-        enable_configured_interfaces_after_defining and
+        (enable_configured_interfaces_after_defining or item['enable']) and
         item['configure'] and
         config_interface['changed']
 
@@ -63,7 +63,7 @@
   with_items: '{{ network_bridges }}'
   when: >
         config_network_bridges and
-        enable_configured_interfaces_after_defining and
+        (enable_configured_interfaces_after_defining or item['enable']) and
         item['configure'] and
         config_interface['changed']
 
@@ -73,7 +73,7 @@
   with_items: '{{ ovs_bridges }}'
   when: >
         config_ovs_bridges and
-        enable_configured_interfaces_after_defining and
+        (enable_configured_interfaces_after_defining or item['enable']) and
         item['configure'] and
         config_interface['changed']
 
@@ -83,7 +83,7 @@
   with_items: '{{ ovs_bonds }}'
   when: >
         config_ovs_bonds and
-        enable_configured_interfaces_after_defining and
+        (enable_configured_interfaces_after_defining or item['enable']) and
         item['configure'] and
         config_interface['changed']
 
@@ -93,6 +93,6 @@
   with_items: '{{ ovs_interfaces }}'
   when: >
         config_ovs_interfaces and
-        enable_configured_interfaces_after_defining and
+        (enable_configured_interfaces_after_defining or item['enable']) and
         item['configure'] and
         config_interface['changed']

@@ -66,7 +66,8 @@ dns_nameservers:
 dns_search: '{{ pri_domain_name }}'
 
 # Defines if interfaces, bonds, bridges, vlans, ovs_bonds, ovs_bridges and
-# ovs_interfaces should be brought up after defining.
+# ovs_interfaces should be brought up after defining. This can be overridden
+# with the `enable` option per interface. Please see the examples below.
 enable_configured_interfaces_after_defining: false
 
 # Defines non Open vSwitch network bonds
@@ -75,6 +76,7 @@ network_bonds: []
   #   address: '192.168.1.10'
   #   netmask: '255.255.255.0'
   #   configure: true
+  #   enable: false
   #   comment: 'Bond Group 0'
   #   method: 'static'
   #   parameters:
@@ -96,6 +98,7 @@ network_bonds: []
 network_bridges: []
   # - name: 'br0'
   #   configure: true
+  #   enable: false
   #   comment: 'Bridge 0'
   #   method: 'static'
   #   address: '192.168.1.11'
@@ -116,6 +119,7 @@ network_bridges: []
 network_interfaces: []
   # - name: 'enp0s3'
   #   configure: true
+  #   enable: false
   #   method: 'dhcp'
   #   parameters:
   #     - param: 'pre-up sleep'
@@ -148,6 +152,7 @@ network_interfaces: []
 network_vlans: []
   # - name: 'enp0s8.100'
   #   configure: true
+  #   enable: false
   #   comment: 'VLAN 100'
   #   method: 'manual'
   #   address:
@@ -163,6 +168,7 @@ ovs_bonds: []
   #   bridge: 'vmbr0'
   #   comment: 'OVS Bond'
   #   configure: true
+  #   enable: false
   #   # gateway:
   #   method: 'manual'
   #   # netmask:
@@ -185,6 +191,7 @@ ovs_bridges: []
   #   # address:
   #   comment: 'OVS Bridge'
   #   configure: true
+  #   enable: false
   #   # gateway:
   #   method: 'manual'
   #   # netmask:
@@ -208,6 +215,7 @@ ovs_interfaces: []
   #   bridge: 'vmbr0'
   #   comment: 'VLAN1'
   #   configure: true
+  #   enable: false
   #   gateway:
   #   method: 'static'
   #   netmask:
