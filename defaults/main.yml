@@ -200,3 +200,6 @@ ovs_interfaces:
   #   # parameters:
 
 pri_domain_name: example.org
+
+# Install or not lldp
+config_install_lldp: true
