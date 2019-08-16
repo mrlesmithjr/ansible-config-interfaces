@@ -115,6 +115,17 @@ network_interfaces:
   #   configure: true
   #   comment: br0 member
   #   method: manual
+  # - name: enp131s0f0
+  #   configure: true
+  #   enable: true
+  #   method: manual
+  #   allow:
+  #     - interface: vmbr0
+  #   parameters:
+  #     - param: ovs_type
+  #       val: OVSPort
+  #     - param: ovs_bridge
+  #       val: vmbr0
 
 # Defines non Open vSwitch network vlans
 network_vlans:
