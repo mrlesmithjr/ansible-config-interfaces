@@ -198,3 +198,7 @@ ovs_interfaces:
   #   # parameters:
 
 pri_domain_name: example.org
+
+# Choose to use OpenvSwitch from the Proxmox repository or from debian.
+ovs_proxmox_repo: false
+ovs_proxmox_repository_line: "deb http://download.proxmox.com/debian/pve {{ ansible_dist  ribution_release }} pve-no-subscription"

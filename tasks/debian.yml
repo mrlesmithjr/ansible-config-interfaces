@@ -1,4 +1,7 @@
 ---
+- name: Gather distribution specific variables
+  include_vars: "debian-{{ ansible_distribution_release }}.yml"
+
 - name: debian | Installing Pre-Req Packages
   apt:
     name: ["lldpd"]
@@ -6,6 +9,20 @@
   become: true
   register: result
   until: result is successful
+
+- name: Trust Proxmox' packaging key
+  apt_key:
+    data: "{{ lookup('file', pve_release_key) }}"
+    id: "{{ pve_release_key_id }}"
+    state: present
+  when: ovs_proxmox_repo
+  
+- name: Add Proxmox repository
+  apt_repository:
+    repo: "{{ ovs_proxmox_repository_line }}"
+    filename: proxmox
+    state: present
+  when: ovs_proxmox_repo
 
 - name: debian | Installing bridge-utils
   apt:
