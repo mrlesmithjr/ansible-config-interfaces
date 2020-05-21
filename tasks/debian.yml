@@ -6,6 +6,10 @@
   become: true
   register: result
   until: result is successful
+  when:
+    config_network_bridges or
+    config_network_bonds or
+    config_network_vlans
 
 - name: debian | Installing bridge-utils
   apt:
