@@ -1,6 +1,8 @@
 ---
 # defaults file for ansible-config-interfaces
 
+config_interface_template: etc/network/interfaces.j2
+
 # Defines if network bonds should be configured as defined
 config_network_bonds: false
 

@@ -36,7 +36,7 @@
 
 - name: debian | Configuring Defined Interfaces
   template:
-    src: etc/network/interfaces.j2
+    src: "{{ config_interface_template }}"
     dest: /etc/network/interfaces
     owner: root
     group: root
