@@ -6,6 +6,7 @@
   become: true
   register: result
   until: result is successful
+  when: config_install_lldp | bool
 
 - name: debian | Installing bridge-utils
   apt:
