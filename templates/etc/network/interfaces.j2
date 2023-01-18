@@ -263,6 +263,28 @@ iface {{ item['name'] }} inet {{ item['method']|lower }}
 ########## End of OVS Interfaces
 {% endif %}
 
+{% if config_ovs_ports is defined and config_ovs_ports %}
+########## OVS Ports
+{%   for item in ovs_ports %}
+{%     if item['configure'] is defined and item['configure'] %}
+{%       if item['comment'] is defined %}
+# {{ item['comment'] }}
+{%       endif %}
+auto {{ item['name'] }}
+allow-{{ item['bridge'] }} {{ item['name'] }}
+iface {{ item['name'] }} inet {{ item['method']|lower }}
+  ovs_bridge {{ item['bridge'] }}
+  ovs_type OVSPort
+{%       if item['options'] is defined %}
+  ovs_options {% for item2 in item['options'] %}{{ item2['opt'] }}={{ item2['val'] }}{% if not loop.last %} {% endif %}{% endfor %}
+
+{%       endif %}
+{%     endif %}
+
+{%   endfor %}
+########## End of OVS Ports
+{% endif %}
+
 {% if dns_nameservers is defined and dns_nameservers != [] %}
 dns-nameservers {{ dns_nameservers|join (' ') }}
 {% endif %}

@@ -106,3 +106,13 @@
     (enable_configured_interfaces_after_defining or item['enable']) and
     item['configure'] and
     config_interface['changed']
+
+- name: debian | Restarting OVS Ports
+  shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  become: true
+  with_items: "{{ ovs_ports }}"
+  when: >
+    config_ovs_ports and
+    (enable_configured_interfaces_after_defining or item['enable']) and
+    item['configure'] and
+    config_interface['changed']

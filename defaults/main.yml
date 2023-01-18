@@ -24,6 +24,9 @@ config_ovs_bridges: false
 # Defines if Open vSwitch interfaces should be configured as defined
 config_ovs_interfaces: false
 
+# Defines if Open vSwitch ports should be configured as defined
+config_ovs_ports: false
+
 # Defines all dns servers to configure
 dns_nameservers:
   - 8.8.8.8
@@ -198,6 +201,22 @@ ovs_interfaces:
   #   #   - opt: vlan_mode
   #   #     val: access
   #   # parameters:
+
+# Defines Open vSwitch ports
+ovs_ports:
+  []
+  # - name: eno5
+  #   configure: true
+  #   enable: true
+  #   comment: Physical interface for traffic coming into the system.
+  #   bridge: vmbr0
+  #   method: manual
+  #   options:
+  #     - opt: tag
+  #       val: 79
+  #     - opt: vlan_mode
+  #       val: native-untagged
+
 
 pri_domain_name: example.org
 
