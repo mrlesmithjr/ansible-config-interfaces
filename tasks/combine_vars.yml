@@ -1,0 +1,45 @@
+---
+- name: combine_vars | Combine vars for Ansible Config Interfaces
+  ansible.builtin.set_fact:
+    network_interfaces: '{{ lookup("community.general.merge_variables", "^network_interfaces_.+$", initial_value=network_interfaces) }}'
+    network_bridges: '{{ lookup("community.general.merge_variables", "^network_bridges_.+$", initial_value=network_bridges) }}'
+    network_bonds: '{{ lookup("community.general.merge_variables", "^network_bonds_.+$", initial_value=network_bonds) }}'
+    network_vlans: '{{ lookup("community.general.merge_variables", "^network_vlans_.+$", initial_value=network_vlans) }}'
+    ovs_interfaces: '{{ lookup("community.general.merge_variables", "^ovs_interfaces_.+$", initial_value=ovs_interfaces) }}'
+    ovs_bridges: '{{ lookup("community.general.merge_variables", "^ovs_bridges_.+$", initial_value=ovs_bridges) }}'
+    ovs_bonds: '{{ lookup("community.general.merge_variables", "^ovs_bonds_.+$", initial_value=ovs_bonds) }}'
+
+- name: combine_vars | Create network_interfaces_list from network_interfaces dict
+  ansible.builtin.set_fact:
+    network_interfaces_list: '{{ network_interfaces_list|default([]) + [item.value | combine({"name": item.key})] }}'
+  loop: '{{ network_interfaces | dict2items }}'
+
+- name: combine_vars | Create network_bridges_list list from network_bridges dict
+  ansible.builtin.set_fact:
+    network_bridges_list: '{{ network_bridges_list|default([]) + [item.value | combine({"name": item.key})] }}'
+  loop: '{{ network_bridges | dict2items }}'
+
+- name: combine_vars | Create network_bonds_list from network_bonds dict
+  ansible.builtin.set_fact:
+    network_bonds_list: '{{ network_bonds_list|default([]) + [item.value | combine({"name": item.key})] }}'
+  loop: '{{ network_bonds | dict2items }}'
+
+- name: combine_vars | Create network_vlans_list from network_vlans dict
+  ansible.builtin.set_fact:
+    network_vlans_list: '{{ network_vlans_list|default([]) + [item.value | combine({"name": item.key})] }}'
+  loop: '{{ network_vlans | dict2items }}'
+
+- name: combine_vars | Create ovs_interfaces_list from ovs_interfaces dict
+  ansible.builtin.set_fact:
+    ovs_interfaces_list: '{{ ovs_interfaces_list|default([]) + [item.value | combine({"name": item.key})] }}'
+  loop: '{{ ovs_interfaces | dict2items }}'
+
+- name: combine_vars | Create ovs_bridges_list from ovs_bridges dict
+  ansible.builtin.set_fact:
+    ovs_bridges_list: '{{ ovs_bridges_list|default([]) + [item.value | combine({"name": item.key})] }}'
+  loop: '{{ ovs_bridges | dict2items }}'
+
+- name: combine_vars | Create ovs_bonds_list from ovs_bonds dict
+  ansible.builtin.set_fact:
+    ovs_bonds_list: '{{ ovs_bonds_list|default([]) + [item.value | combine({"name": item.key})] }}'
+  loop: '{{ ovs_bonds | dict2items }}'

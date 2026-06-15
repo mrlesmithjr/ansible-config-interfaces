@@ -4,9 +4,9 @@
 auto lo
 iface lo inet loopback
 
-{% if config_network_interfaces is defined and config_network_interfaces and network_interfaces != [] %}
+{% if config_network_interfaces is defined and config_network_interfaces and network_interfaces_list is defined and network_interfaces_list|length > 0 %}
 ########## Network Interfaces
-{%   for item in network_interfaces %}
+{%   for item in network_interfaces_list %}
 {%     if item['configure'] is defined and item['configure'] %}
 {%       if item['comment'] is defined and item['comment'] != None %}
 # {{ item['comment'] }}
@@ -14,6 +14,14 @@ iface lo inet loopback
 {%       if item['method']|lower == "static" or item['method']|lower == "manual" %}
 auto {{ item['name'] }}
 iface {{ item['name'] }} inet {{ item['method']|lower }}
+{%       if item['ovs_type'] is defined and item['ovs_type'] == 'OVSPort' %}
+  ovs_type OVSPort
+  ovs_bridge {{ item['bridge'] }}
+{%       if item['options'] is defined %}
+  ovs_options {% for item2 in item['options'] %}{{ item2['opt'] }}={{ item2['val'] }}{% if not loop.last %} {% endif %}{% endfor %}
+
+{%       endif %}
+{%       endif %}
 {%         if item['address'] is defined and item['address'] != None %}
   address {{ item['address'] }}
 {%         endif %}
@@ -43,9 +51,9 @@ iface {{ item['name'] }} inet {{ item['method']|lower }}
 ########## End of Network Interfaces
 {% endif %}
 
-{% if config_network_bonds is defined and config_network_bonds %}
+{% if config_network_bonds is defined and config_network_bonds and network_bonds_list is defined and network_bonds_list|length > 0 %}
 ########## Network Bonds
-{%   for item in network_bonds %}
+{%   for item in network_bonds_list %}
 {%     if item['configure'] is defined and item['configure'] %}
 {%       if item['comment'] is defined and item['comment'] != None %}
 # {{ item['comment'] }}
@@ -77,9 +85,9 @@ iface {{ item['name'] }} inet {{ item['method']|lower }}
 ########## End of Network Bonds
 {% endif %}
 
-{% if config_network_vlans is defined and config_network_vlans %}
+{% if config_network_vlans is defined and config_network_vlans and network_vlans_list is defined and network_vlans_list|length > 0 %}
 ########## Network VLANS
-{%   for item in network_vlans %}
+{%   for item in network_vlans_list %}
 {%     if item['configure'] is defined and item['configure'] %}
 {%       if item['comment'] is defined %}
 # {{ item['comment'] }}
@@ -113,9 +121,9 @@ iface {{ item['name'] }} inet {{ item['method']|lower }}
 ########## End of Network VLANS
 {% endif %}
 
-{% if config_network_bridges is defined and config_network_bridges %}
+{% if config_network_bridges is defined and config_network_bridges and network_bridges_list is defined and network_bridges_list|length > 0 %}
 ########## Network Bridges
-{%   for item in network_bridges %}
+{%   for item in network_bridges_list %}
 {%     if item['configure'] is defined and item['configure'] %}
 {%       if item['comment'] is defined %}
 # {{ item['comment'] }}
@@ -149,14 +157,14 @@ iface {{ item['name'] }} inet {{ item['method']|lower }}
 ########## End of Network Bridges
 {% endif %}
 
-{% if config_ovs_bonds is defined and config_ovs_bonds %}
+{% if config_ovs_bonds is defined and config_ovs_bonds and ovs_bonds_list is defined and ovs_bonds_list|length > 0 %}
 ########## OVS Bonds
-{%   for item in ovs_bonds %}
+{%   for item in ovs_bonds_list %}
 {%     if item['configure'] is defined and item['configure'] %}
 {%       if item['comment'] is defined %}
 # {{ item['comment'] }}
 {%       endif %}
-allow-{{ item['bridge'] }} {{ item['name'] }}
+auto {{ item['name'] }}
 iface {{ item['name'] }} inet {{ item['method']|lower }}
 {%       if item['method']|lower == "static" or item['method']|lower == "manual" %}
 {%         if item['address'] is defined and item['address'] != None %}
@@ -187,15 +195,14 @@ iface {{ item['name'] }} inet {{ item['method']|lower }}
 ########## End of OVS Bonds
 {% endif %}
 
-{% if config_ovs_bridges is defined and config_ovs_bridges %}
+{% if config_ovs_bridges is defined and config_ovs_bridges and ovs_bridges_list is defined and ovs_bridges_list|length > 0 %}
 ########## OVS Bridges
-{%   for item in ovs_bridges %}
+{%   for item in ovs_bridges_list %}
 {%     if item['configure'] is defined and item['configure'] %}
 {%       if item['comment'] is defined %}
 # {{ item['comment'] }}
 {%       endif %}
 auto {{ item['name'] }}
-allow-ovs {{ item['name'] }}
 iface {{ item['name'] }} inet {{ item['method']|lower }}
 {%       if item['method']|lower == "static" or item['method']|lower == "manual" %}
 {%         if item['address'] is defined and item['address'] != None %}
@@ -225,15 +232,14 @@ iface {{ item['name'] }} inet {{ item['method']|lower }}
 ########## End of OVS Bridges
 {% endif %}
 
-{% if config_ovs_interfaces is defined and config_ovs_interfaces %}
+{% if config_ovs_interfaces is defined and config_ovs_interfaces and ovs_interfaces_list is defined and ovs_interfaces_list|length > 0%}
 ########## OVS Interfaces
-{%   for item in ovs_interfaces %}
+{%   for item in ovs_interfaces_list %}
 {%     if item['configure'] is defined and item['configure'] %}
 {%       if item['comment'] is defined %}
 # {{ item['comment'] }}
 {%       endif %}
 auto {{ item['name'] }}
-allow-{{ item['bridge'] }} {{ item['name'] }}
 iface {{ item['name'] }} inet {{ item['method']|lower }}
 {%       if item['method']|lower == "static" or item['method']|lower == "manual" %}
 {%         if item['address'] is defined and item['address'] != None %}

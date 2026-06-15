@@ -1,32 +1,32 @@
-BOOTPROTO={{ item['method']|lower }}
-DEVICE={{ item['name'] }}
-{% if item['method']|lower == 'static' %}
+BOOTPROTO={{ item.value.method|lower }}
+DEVICE={{ item.key }}
+{% if item.value.method|lower == 'static' %}
 {% if dns_nameservers is defined %}
 {%   for ns in dns_nameservers %}
 DNS{{ loop.index }}={{ ns }}
 {%   endfor %}
 {% endif %}
-{%   if item['gateway'] is defined %}
-GATEWAY={{ item['gateway'] }}
+{%   if item.value.gateway is defined %}
+GATEWAY={{ item.value.gateway }}
 {%   endif %}
-{%   if item['address'] is defined %}
-IPADDR={{ item['address'] }}
+{%   if item.value.address is defined %}
+IPADDR={{ item.value.address }}
 {%   endif %}
-{%   if item['netmask'] is defined %}
-NETMASK={{ item['netmask'] }}
+{%   if item.value.netmask is defined %}
+NETMASK={{ item.value.netmask }}
 {%   endif %}
 {% endif %}
 {% if config_network_bonds %}
 {%   if network_bonds is defined %}
-{%     for nb in network_bonds %}
-{%       for slave in nb['slaves'] %}
-{%         if slave == item['name'] %}
-MASTER={{ nb['name'] }}
+{%     for bond_name, nb in network_bonds.items() %}
+{%       for slave in nb.slaves %}
+{%         if slave == item.key %}
+MASTER={{ bond_name }}
 SLAVE=yes
 TYPE=Ethernet
 {%         endif %}
 {%       endfor %}
-{%         if nb['name'] == item['name'] %}
+{%         if bond_name == item.key %}
 BONDING_MASTER=yes
 BONDING_OPTS={% for opt in nb['parameters'] %}{{ opt['param'] }}={{ opt['val'] }}{% if not loop.last %} {% endif %}{% endfor %}
 
@@ -37,21 +37,21 @@ TYPE=Bond
 {% endif %}
 {% if config_network_bridges %}
 {%   if network_bridges is defined %}
-{%     for nbr in network_bridges %}
+{%     for bridge_name, nbr in network_bridges.items() %}
 {%       for port in nbr['ports'] %}
-{%         if port == item['name'] %}
-BRIDGE={{ nbr['name'] }}
+{%         if port == item.key %}
+BRIDGE={{ bridge_name }}
 DELAY=0
 TYPE=Ethernet
 {%         endif %}
 {%       endfor %}
-{%       if nbr['name'] == item['name'] %}
+{%       if bridge_name == item.key %}
 TYPE=Bridge
 {%       endif %}
 {%     endfor %}
 {%   endif %}
 {% endif %}
-NAME={{ item['name'] }}
-NETBOOT={{ item['netboot']|default('yes') }}
-ONBOOT={{ item['onboot']|default('yes') }}
+NAME={{ item.key }}
+NETBOOT={{ item.value.netboot|default("yes") }}
+ONBOOT={{ item.value.onboot|default("yes") }}
 PEERDNS=yes

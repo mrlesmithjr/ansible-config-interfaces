@@ -1,7 +1,22 @@
 ---
+# fetch package data
+- name: main | Gather package facts
+  ansible.builtin.package_facts:
+    manager: auto
+
+# combine variables
+- name: main | Include Combine variables tasks
+  ansible.builtin.include_tasks:
+    file: combine_vars.yml
+    apply:
+      tags: always
+  tags: always
+
 # tasks file for ansible-config-interfaces
-- ansible.builtin.include_tasks: debian.yml
+- name: main | Include Debian specific tasks 
+  ansible.builtin.include_tasks: debian.yml
   when: ansible_os_family == "Debian"
 
-- ansible.builtin.include_tasks: redhat.yml
+- name: main | Include RedHat specific tasks
+  ansible.builtin.include_tasks: redhat.yml
   when: ansible_os_family == "RedHat"

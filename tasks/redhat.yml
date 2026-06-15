@@ -1,6 +1,6 @@
 ---
 - name: redhat | Enabling EPEL repo
-  yum:
+  ansible.builtin.yum:
     name: ["epel-release"]
     state: present
   become: true
@@ -9,110 +9,116 @@
   when: ansible_distribution != "Fedora"
 
 - name: redhat | Installing Pre-Reqs
-  yum:
+  ansible.builtin.yum:
     name: ["lldpd"]
     state: present
   become: true
   register: result
   until: result is successful
   when:
-  - config_install_lldp | bool
-  - ansible_distribution != "Fedora"
+    - config_install_lldp | bool
+    - ansible_distribution != "Fedora"
 
 - name: redhat | Installing bridge-utils
-  yum:
+  ansible.builtin.yum:
     name: ["bridge-utils"]
   become: true
   register: result
   until: result is successful
-  when: >
-    config_network_bridges and
-    ansible_distribution != "Fedora"
+  when:
+    - config_network_bridges
+    - ansible_distribution != "Fedora"
 
 - name: redhat | Installing VLAN Packages
-  yum:
+  ansible.builtin.yum:
     name: ["vconfig"]
     state: present
   become: true
   register: result
   until: result is successful
-  when: >
-    config_network_vlans and
-    ansible_distribution != "Fedora"
+  when:
+    - config_network_vlans
+    - ansible_distribution != "Fedora"
 
 - name: redhat | Enabling Bonding
-  modprobe:
+  community.general.modprobe:
     name: bonding
     state: present
   become: true
   when: config_network_bonds
 
 - name: redhat | Enabling Bridging
-  modprobe:
+  community.general.modprobe:
     name: bridge
     state: present
   become: true
   when: config_network_bridges
 
 - name: redhat | Configuring Interfaces
-  template:
+  ansible.builtin.template:
     src: etc/sysconfig/network-scripts/ifcfg.j2
-    dest: "/etc/sysconfig/network-scripts/ifcfg-{{ item['name'] }}"
+    dest: "/etc/sysconfig/network-scripts/ifcfg-{{ item.key }}"
   register: config_interface
   become: true
-  with_items: "{{ network_interfaces }}"
-  when: >
-    config_network_interfaces and
-    item['configure']
+  loop: "{{ network_interfaces | dict2items }}"
+  when:
+    - config_network_interfaces
+    - item.value["configure"]
 
 - name: redhat | Configuring Bonds
-  template:
+  ansible.builtin.template:
     src: etc/sysconfig/network-scripts/ifcfg.j2
-    dest: "/etc/sysconfig/network-scripts/ifcfg-{{ item['name'] }}"
+    dest: "/etc/sysconfig/network-scripts/ifcfg-{{ item.key }}"
   register: config_bond
   become: true
-  with_items: "{{ network_bonds }}"
-  when: >
-    config_network_bonds and
-    item['configure']
+  loop: "{{ network_bonds | dict2items }}"
+  when:
+    - config_network_bonds
+    - item.value["configure"]
 
 - name: redhat | Configuring Bridges
-  template:
+  ansible.builtin.template:
     src: etc/sysconfig/network-scripts/ifcfg.j2
-    dest: "/etc/sysconfig/network-scripts/ifcfg-{{ item['name'] }}"
+    dest: "/etc/sysconfig/network-scripts/ifcfg-{{ item.key }}"
   register: config_bridge
   become: true
-  with_items: "{{ network_bridges }}"
-  when: >
-    config_network_bridges and
-    item['configure']
+  loop: "{{ network_bridges | dict2items }}"
+  when:
+    - config_network_bridges
+    - item.value["configure"]
 
 - name: redhat | Restarting Network Bonds
-  shell: bash -c "ifdown {{ item['item']['name'] }} && ifup {{ item['item']['name'] }}"
+  ansible.builtin.shell: bash -c "ifdown {{ item['item']['key'] }} && ifup {{ item['item']['key'] }}"
   become: true
-  with_items: "{{ config_bond['results'] }}"
-  when: >
-    config_network_bonds and
-    enable_configured_interfaces_after_defining and
-    item['item']['configure'] and
-    item['changed']
+  loop: "{{ config_bond['results'] }}"
+  when:
+    - config_network_bonds
+    - enable_configured_interfaces_after_defining
+    - item["item"]["configure"]
+    - item["changed"]
+    - not enable_networking_service
+    - not ansible_check_mode
 
 - name: redhat | Restarting Network Bridges
-  shell: bash -c "ifdown {{ item['item']['name'] }} && ifup {{ item['item']['name'] }}"
+  ansible.builtin.shell: bash -c "ifdown {{ item['item']['key'] }} && ifup {{ item['item']['key'] }}"
   become: true
-  with_items: "{{ config_bridge['results'] }}"
-  when: >
-    config_network_bridges and
-    enable_configured_interfaces_after_defining and
-    item['item']['configure'] and
-    item['changed']
+  loop: "{{ config_bridge['results'] }}"
+  when:
+    - config_network_bridges
+    - enable_configured_interfaces_after_defining
+    - item["item"]["configure"]
+    - item["changed"]
+    - not enable_networking_service
+    - not ansible_check_mode
 
 - name: redhat | Restarting Network Interfaces
-  shell: bash -c "ifdown {{ item['item']['name'] }} && ifup {{ item['item']['name'] }}"
+  ansible.builtin.shell: bash -c "ifdown {{ item['item']['key'] }} && ifup {{ item['item']['key'] }}"
   become: true
-  with_items: "{{ config_interface['results'] }}"
-  when: >
-    config_network_interfaces and
-    enable_configured_interfaces_after_defining and
-    item['item']['configure'] and
-    item['changed']
+  loop: "{{ config_interface['results'] }}"
+  when:
+    - config_network_interfaces
+    - enable_configured_interfaces_after_defining
+    - item["item"]["configure"]
+    - item["changed"]
+    - not enable_networking_service
+    - not ansible_check_mode

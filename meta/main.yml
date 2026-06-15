@@ -5,7 +5,7 @@ galaxy_info:
 
   license: MIT
 
-  min_ansible_version: 1.2
+  min_ansible_version: 2.10
 
   platforms:
     - name: EL
@@ -23,3 +23,6 @@ galaxy_info:
     - networking
     - system
 dependencies: []
+
+collections:
+  - community.general

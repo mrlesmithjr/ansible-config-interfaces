@@ -1,2 +1,7 @@
 ---
 # handlers file for ansible-config-interfaces
+- name: enable networking service
+  ansible.builtin.service:
+    name: networking
+    enabled: true
+  when: enable_networking_service

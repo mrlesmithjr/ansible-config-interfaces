@@ -38,168 +38,168 @@ dns_search: "{{ pri_domain_name }}"
 enable_configured_interfaces_after_defining: false
 
 # Defines non Open vSwitch network bonds
-network_bonds:
-  []
-  # - name: bond0
-  #   address: 192.168.1.10
-  #   netmask: 255.255.255.0
-  #   configure: true
-  #   enable: false
-  #   comment: Bond Group 0
-  #   method: static
-  #   parameters:
-  #     - param: bond_mode
-  #       val: active-backup
-  #     - param: bond_miimon
-  #       val: 100
-  #     # - param: miimon
-  #     #   val: 100
-  #     # - param: mode
-  #     #   val: active-backup
-  #     - param: primary
-  #       val: enp0s9
-  #   slaves:
-  #     - enp0s9
-  #     - enp0s10
+network_bonds: {}
+# bond0:
+#   address: 192.168.1.10
+#   netmask: 255.255.255.0
+#   configure: true
+#   enable: false
+#   comment: Bond Group 0
+#   method: static
+#   parameters:
+#     - param: bond_mode
+#       val: active-backup
+#     - param: bond_miimon
+#       val: 100
+#     # - param: miimon
+#     #   val: 100
+#     # - param: mode
+#     #   val: active-backup
+#     - param: primary
+#       val: enp0s9
+#   slaves:
+#     - enp0s9
+#     - enp0s10
 
 # Defines non Open vSwitch network bridges
-network_bridges:
-  []
-  # - name: br0
-  #   configure: true
-  #   enable: false
-  #   comment: Bridge 0
-  #   method: static
-  #   address: 192.168.1.11
-  #   netmask: 255.255.255.0
-  #   netmask_cidr: 24
-  #   gateway: 192.168.1.1
-  #   parameters:
-  #     - param: bridge_stp
-  #       val: off
-  #     - param: bridge_fd
-  #       val: 0
-  #     # - param: up route add default gw
-  #     #   val: 10.0.106.1
-  #   ports:
-  #     - enp0s16
+network_bridges: {}
+# br0:
+#   configure: true
+#   enable: false
+#   comment: Bridge 0
+#   method: static
+#   address: 192.168.1.11
+#   netmask: 255.255.255.0
+#   netmask_cidr: 24
+#   gateway: 192.168.1.1
+#   parameters:
+#     - param: bridge_stp
+#       val: off
+#     - param: bridge_fd
+#       val: 0
+#     # - param: up route add default gw
+#     #   val: 10.0.106.1
+#   ports:
+#     - enp0s16
 
 # Defines non Open vSwitch network interfaces
-network_interfaces:
-  []
-  # - name: enp0s3
-  #   configure: true
-  #   enable: false
-  #   method: dhcp
-  #   parameters:
-  #     - param: pre-up sleep
-  #       val: 2
-  # - name: enp0s8
-  #   configure: true
-  #   method: static
-  #   address: 192.168.250.10
-  #   netmask: 255.255.255.0
-  # - name: enp0s9
-  #   configure: true
-  #   comment: bond0 member
-  #   method: manual
-  #   parameters:
-  #     - param: bond_master
-  #       val: bond0
-  # - name: enp0s10
-  #   configure: true
-  #   comment: bond0 member
-  #   method: manual
-  #   parameters:
-  #     - param: bond_master
-  #       val: bond0
-  # - name: enp0s16
-  #   configure: true
-  #   comment: br0 member
-  #   method: manual
+network_interfaces: {}
+# enp0s3:
+#   configure: true
+#   enable: false
+#   method: dhcp
+#   parameters:
+#     - param: pre-up sleep
+#       val: 2
+# enp0s8:
+#   configure: true
+#   method: static
+#   address: 192.168.250.10
+#   netmask: 255.255.255.0
+# enp0s9:
+#   configure: true
+#   comment: bond0 member
+#   method: manual
+#   parameters:
+#     - param: bond_master
+#       val: bond0
+# - name: enp0s10
+#   configure: true
+#   comment: bond0 member
+#   method: manual
+#   parameters:
+#     - param: bond_master
+#       val: bond0
+# - name: enp0s16
+#   configure: true
+#   comment: br0 member
+#   method: manual
 
 # Defines non Open vSwitch network vlans
-network_vlans:
-  []
-  # - name: enp0s8.100
-  #   configure: true
-  #   enable: false
-  #   comment: VLAN 100
-  #   method: manual
-  #   address:
-  #   netmask:
-  #   netmask_cidr:
-  #   gateway:
-  #   vlan_device: enp0s8
+network_vlans: {}
+# enp0s8.100:
+#   configure: true
+#   enable: false
+#   comment: VLAN 100
+#   method: manual
+#   address:
+#   netmask:
+#   netmask_cidr:
+#   gateway:
+#   vlan_device: enp0s8
 
 # Defines Open vSwitch bonds
-ovs_bonds:
-  []
-  # - name: bond0
-  #   # address:
-  #   bridge: vmbr0
-  #   comment: OVS Bond
-  #   configure: true
-  #   enable: false
-  #   # gateway:
-  #   method: manual
-  #   # netmask:
-  #   # netmask_cidr:
-  #   options:
-  #     - opt: bond_mode
-  #       val: active-backup
-  #     - opt: lacp
-  #       val: off
-  #   # parameters:
-  #   #   - param: ''
-  #   #     val: ''
-  #   ports:
-  #     - enp0s9
-  #     - enp0s10
+ovs_bonds: {}
+# bond0:
+#   # address:
+#   bridge: vmbr0
+#   comment: OVS Bond
+#   configure: true
+#   enable: false
+#   # gateway:
+#   method: manual
+#   # netmask:
+#   # netmask_cidr:
+#   options:
+#     - opt: bond_mode
+#       val: active-backup
+#     - opt: lacp
+#       val: off
+#   # parameters:
+#   #   - param: ''
+#   #     val: ''
+#   ports:
+#     - enp0s9
+#     - enp0s10
 
 # Defines Open vSwitch bridges
-ovs_bridges:
-  []
-  # - name: vmbr0
-  #   # address:
-  #   comment: OVS Bridge
-  #   configure: true
-  #   enable: false
-  #   # gateway:
-  #   method: manual
-  #   # netmask:
-  #   # netmask_cidr:
-  #   # options:
-  #   #   - opt: ""
-  #   #     val: ""
-  #   # parameters:
-  #   #   - param: ""
-  #   #     val: ""
-  #   ports:
-  #     # - enp0s9
-  #     # - enp0s10
-  #     - bond0
-  #     - vlan1
+ovs_bridges: {}
+# vmbr0:
+#   # address:
+#   comment: OVS Bridge
+#   configure: true
+#   enable: false
+#   # gateway:
+#   method: manual
+#   # netmask:
+#   # netmask_cidr:
+#   # options:
+#   #   - opt: ""
+#   #     val: ""
+#   # parameters:
+#   #   - param: ""
+#   #     val: ""
+#   ports:
+#     # - enp0s9
+#     # - enp0s10
+#     - bond0
+#     - vlan1
 
 # Defines Open vSwitch interfaces
-ovs_interfaces:
-  []
-  # - name: vlan1
-  #   address:
-  #   bridge: vmbr0
-  #   comment: VLAN1
-  #   configure: true
-  #   enable: false
-  #   gateway:
-  #   method: static
-  #   netmask:
-  #   netmask_cidr:
-  #   # options:
-  #   #   - opt: vlan_mode
-  #   #     val: access
-  #   # parameters:
+ovs_interfaces: {}
+# vlan1:
+#   address:
+#   bridge: vmbr0
+#   comment: VLAN1
+#   configure: true
+#   enable: false
+#   gateway:
+#   method: static
+#   netmask:
+#   netmask_cidr:
+#   # options:
+#   #   - opt: vlan_mode
+#   #     val: access
+#   # parameters:
 
 pri_domain_name: example.org
 
 # Install or not lldp
 config_install_lldp: true
+
+# Whether to install ifupdown2 utility or not
+config_install_ifupdown2: false
+
+# Whether to use per interface ifupdown or restart the whole networking.service
+# Historical default is to restart interfaces 1-by-1 so that remains the default.
+enable_networking_service: false

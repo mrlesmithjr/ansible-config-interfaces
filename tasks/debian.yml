@@ -1,6 +1,6 @@
 ---
 - name: debian | Installing Pre-Req Packages
-  apt:
+  ansible.builtin.apt:
     name: ["lldpd"]
     state: present
   become: true
@@ -8,8 +8,17 @@
   until: result is successful
   when: config_install_lldp | bool
 
+- name: debian | Installing ifupdown2
+  ansible.builtin.apt:
+    name: ["ifupdown2"]
+    state: present
+  become: true
+  register: result
+  until: result is successful
+  when: config_install_ifupdown2 | bool
+
 - name: debian | Installing bridge-utils
-  apt:
+  ansible.builtin.apt:
     name: ["bridge-utils"]
     state: present
   become: true
@@ -18,7 +27,7 @@
   when: config_network_bridges
 
 - name: debian | Installing Bonding Packages
-  apt:
+  ansible.builtin.apt:
     name: ["ifenslave"]
     state: present
   become: true
@@ -26,83 +35,109 @@
   until: result is successful
   when: config_network_bonds
 
+# Don't install vlan package for proxmox-ve
 - name: debian | Installing VLAN Packages
-  apt:
+  ansible.builtin.apt:
     name: ["vlan"]
     state: present
   become: true
   register: result
   until: result is successful
-  when: config_network_vlans
+  when:
+    - config_network_vlans
+    - "'proxmox-ve' not in ansible_facts.packages"
 
 - name: debian | Configuring Defined Interfaces
-  template:
+  ansible.builtin.template:
     src: "{{ config_interface_template }}"
     dest: /etc/network/interfaces
     owner: root
     group: root
     mode: u=rw,g=r,o=r
+    backup: true
   register: config_interface
   become: true
-  when: >
-    (config_network_interfaces is defined and
-    config_network_interfaces)
+  when:
+    - config_network_interfaces is defined
+    - config_network_interfaces
+  notify: enable networking service
 
 - name: debian | Restarting Network Interfaces
-  shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  ansible.builtin.shell: bash -c "ifdown {{ item.key }} --force && ifup {{ item.key }} --force"
   become: true
-  with_items: "{{ network_interfaces }}"
-  when: >
-    (enable_configured_interfaces_after_defining or item['enable']) and
-    item['configure'] and
-    config_interface['changed']
+  loop: "{{ network_interfaces | dict2items }}"
+  when:
+    - (enable_configured_interfaces_after_defining or item.value["enable"])
+    - item.value["configure"]
+    - config_interface["changed"]
+    - not enable_networking_service
+    - not ansible_check_mode
 
 - name: debian | Restarting Network VLANs
-  shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  ansible.builtin.shell: bash -c "ifdown {{ item.key }} --force && ifup {{ item.key }} --force"
   become: true
-  with_items: "{{ network_vlans }}"
-  when: >
-    config_network_vlans and
-    (enable_configured_interfaces_after_defining or item['enable']) and
-    item['configure'] and
-    config_interface['changed']
+  loop: "{{ network_vlans | dict2items }}"
+  when:
+    - config_network_vlans
+    - (enable_configured_interfaces_after_defining or item.value["enable"])
+    - item.value["configure"]
+    - config_interface["changed"]
+    - not enable_networking_service
+    - not ansible_check_mode
 
 - name: debian | Restarting Network Bridges
-  shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  ansible.builtin.shell: bash -c "ifdown {{ item.key }} --force && ifup {{ item.key }} --force"
   become: true
-  with_items: "{{ network_bridges }}"
-  when: >
-    config_network_bridges and
-    (enable_configured_interfaces_after_defining or item['enable']) and
-    item['configure'] and
-    config_interface['changed']
+  loop: "{{ network_bridges | dict2items }}"
+  when:
+    - config_network_bridges
+    - (enable_configured_interfaces_after_defining or item.value["enable"])
+    - item.value["configure"]
+    - config_interface["changed"]
+    - not enable_networking_service
+    - not ansible_check_mode
 
 - name: debian | Restarting OVS Bridges
-  shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  ansible.builtin.shell: bash -c "ifdown {{ item.key }} --force && ifup {{ item.key }} --force"
   become: true
-  with_items: "{{ ovs_bridges }}"
-  when: >
-    config_ovs_bridges and
-    (enable_configured_interfaces_after_defining or item['enable']) and
-    item['configure'] and
-    config_interface['changed']
+  loop: "{{ ovs_bridges | dict2items }}"
+  when:
+    - config_ovs_bridges
+    - (enable_configured_interfaces_after_defining or item.value["enable"])
+    - item.value["configure"]
+    - config_interface["changed"]
+    - not enable_networking_service
+    - not ansible_check_mode
 
 - name: debian | Restarting OVS Bonds
-  shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  ansible.builtin.shell: bash -c "ifdown {{ item.key }} --force && ifup {{ item.key }} --force"
   become: true
-  with_items: "{{ ovs_bonds }}"
-  when: >
-    config_ovs_bonds and
-    (enable_configured_interfaces_after_defining or item['enable']) and
-    item['configure'] and
-    config_interface['changed']
+  loop: "{{ ovs_bonds | dict2items }}"
+  when:
+    - config_ovs_bonds
+    - (enable_configured_interfaces_after_defining or item.value["enable"])
+    - item.value["configure"]
+    - config_interface["changed"]
+    - not enable_networking_service
+    - not ansible_check_mode
 
 - name: debian | Restarting OVS Interfaces
-  shell: bash -c "ifdown {{ item.name }} --force && ifup {{ item.name }} --force"
+  ansible.builtin.shell: bash -c "ifdown {{ item.key }} --force && ifup {{ item.key }} --force"
   become: true
-  with_items: "{{ ovs_interfaces }}"
-  when: >
-    config_ovs_interfaces and
-    (enable_configured_interfaces_after_defining or item['enable']) and
-    item['configure'] and
-    config_interface['changed']
+  loop: "{{ ovs_interfaces | dict2items }}"
+  when:
+    - config_ovs_interfaces
+    - (enable_configured_interfaces_after_defining or item.value["enable"])
+    - item.value["configure"]
+    - config_interface["changed"]
+    - not enable_networking_service
+    - not ansible_check_mode
+
+- name: debian | Restart networking.service
+  ansible.builtin.service:
+    name: networking
+    state: restarted
+  when:
+    - enable_networking_service
+    - enable_configured_interfaces_after_defining
+    - config_interface["changed"]

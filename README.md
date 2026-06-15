@@ -35,6 +35,18 @@ network configurations.
 
 [defaults/main.yml](defaults/main.yml)
 
+**NB!** Converted main lists to dictionary for better ways to overwrite config using `merge_variables` technique.
+
+```yaml
+# Old style
+network_interfaces:
+    - name: eth0
+# New style
+network_interfaces:
+    eth0:
+
+```
+
 ## Dependencies
 
 If interface is wireless you will need to define as such as well as provide the
